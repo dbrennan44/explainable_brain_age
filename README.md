@@ -30,7 +30,7 @@ The pipeline:
 Use `--median-head` to fall back to the original ANTsPyNet median of slice-wise
 predictions.
 
-## OHBM Figure
+## Application in Cognitive Impairment - OHBM 2026
 
 ![OHBM brain-age results](figures/OHBM_brain_age.png)
 
@@ -76,11 +76,12 @@ python brain_age_salience_bids.py /path/to/bids sub-001 \
   --do_preprocessing false
 ```
 
-Run SmoothGrad:
+Run SmoothGrad with affine simulation averaging:
 
 ```bash
 python brain_age_salience_bids.py /path/to/bids sub-001 \
   --session ses-01 \
+  --n-affine 10 \
   --n-smooth 25 \
   --mask-noise
 ```
@@ -121,7 +122,7 @@ python brain_age_salience.py /path/to/sub-001_desc-preproc_T1w.nii.gz \
 | `--n-smooth` | Number of SmoothGrad samples. `0` disables SmoothGrad. |
 | `--sd-noise` | SmoothGrad noise standard deviation after intensity normalization. |
 | `--mask-noise` | Restrict SmoothGrad noise to nonzero brain voxels. |
-| `--n-affine` | Number of affine simulations to average. |
+| `--n-affine` | Number of affine simulations to average, useful for this slice-wise model. |
 | `--no-slice-norm` | Save raw gradients instead of per-slice normalized gradients. |
 | `--seed` | Seed NumPy/TensorFlow stochastic steps. |
 
