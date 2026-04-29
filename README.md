@@ -10,8 +10,6 @@ rather than reporting only a single predicted brain age, it also exports
 voxel-wise attribution maps that help interrogate which anatomical image features
 contribute to elevated brain-age estimates.
 
-> This code is intended for research and reproducible analysis workflows. It is
-> not intended for clinical diagnosis or individual medical decision-making.
 
 ## Methods Overview
 
