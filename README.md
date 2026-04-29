@@ -26,7 +26,9 @@ The pipeline:
    images.
 
 Use `--median-head` to fall back to the original ANTsPyNet median of slice-wise
-predictions.
+predictions. With `--median-head`, gradients are propagated from slice-wise
+brain-age predictions rather than from one participant-level brain-age
+prediction.
 
 ## Application in Cognitive Impairment - OHBM 2026
 
@@ -116,8 +118,8 @@ python brain_age_salience.py /path/to/sub-001_desc-preproc_T1w.nii.gz \
 | Option | Meaning |
 | --- | --- |
 | `--do_preprocessing {true,false}` | Run ANTsPyNet preprocessing. Default: `true`. |
-| `--median-head` | Use the original ANTsPyNet median of slice-wise predictions. |
-| `--n-smooth` | Number of SmoothGrad samples. `0` disables SmoothGrad. |
+| `--median-head` | Use the original ANTsPyNet median of slice-wise predictions; salience is propagated slice-wise, not from a participant-level prediction. |
+| `--n-smooth` | Number of SmoothGrad samples. `0` disables SmoothGrad and produces only the vanilla salience map. |
 | `--sd-noise` | SmoothGrad noise standard deviation after intensity normalization. |
 | `--mask-noise` | Restrict SmoothGrad noise to nonzero brain voxels. |
 | `--n-affine` | Number of affine simulations to average, useful for this slice-wise model. |
@@ -143,6 +145,9 @@ sub-001_ses-01_desc-MeanSmooth25squareMaskedNoiseSmoothGrad_salience.nii.gz
 
 The JSON file contains the predicted age, slice-wise predictions, input paths,
 processing options, and output paths.
+
+When `--n-smooth 0`, no SmoothGrad file is written; only the vanilla salience
+map is produced.
 
 ## Python API
 
