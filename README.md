@@ -60,7 +60,7 @@ brain.
 
 
 
-## Conference Application
+## Application to Cognitive Impairment
 
 ![OHBM brain-age results](figures/OHBM_brain_age.png)
 
