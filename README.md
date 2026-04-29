@@ -15,6 +15,10 @@ The project has two scripts:
 This code is intended for research and reproducible analysis workflows. It is not
 intended for clinical diagnosis or individual medical decision-making.
 
+## Example Figure
+
+![OHBM example figure](figures/ohbm0002.png)
+
 ## What the Pipeline Does
 
 For each T1w image, the pipeline can:
