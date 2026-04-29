@@ -62,7 +62,7 @@ brain.
 
 ## Conference Application
 
-<!-- TODO: Add OHBM results figure here. Suggested path: figures/ohbm_results.png -->
+![OHBM brain-age results](./figures/OHBM_brain_age.png)
 
 This code was used for an OHBM conference analysis examining predicted brain age
 and salience-map differences across cognitive status in older adults from the
