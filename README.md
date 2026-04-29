@@ -268,24 +268,7 @@ print(result["predicted_age"])
 result["vanilla_salience"].to_file("sub-001_desc-vanilla_salience.nii.gz")
 ```
 
-## Reproducibility Notes
-
-- Save the exact command used for each analysis.
-- Keep the generated JSON metadata with every salience map.
-- Use `--seed` to stabilize NumPy/TensorFlow stochastic steps. Affine
-  augmentation may also depend on ANTs internals, so keep the generated metadata
-  with the output files.
-- The first ANTsPyNet run may download model weights/templates; record package
-  versions with `conda env export --from-history` or `pip freeze` for archived
-  conference analyses.
 
 ## License
 
 This project is released under the MIT License. See `LICENSE`.
-
-## Repository Hygiene
-
-The `.gitignore` excludes local BIDS data, derivatives, NIfTI images, model
-weights, and common Python/macOS artifacts. This keeps protected imaging data and
-large generated files out of GitHub while leaving room to add code, documentation,
-figures, and conference result summaries later.
