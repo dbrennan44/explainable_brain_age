@@ -75,36 +75,37 @@ equivalent.
 Run preprocessing from a raw BIDS T1w image:
 
 ```bash
-python brain_age_salience_bids.py /path/to/bids sub-001 --session ses-01 --do_preprocessing
+python brain_age_salience_bids.py /path/to/bids sub-001 --session ses-01
 ```
 
 Reuse the saved preprocessed T1 image and add SmoothGrad:
 
 ```bash
-python brain_age_salience_bids.py /path/to/bids 001 --session 01 --n-smooth 25 --mask-noise
+python brain_age_salience_bids.py /path/to/bids 001 --session 01 --do_preprocessing false --n-smooth 25 --mask-noise
 ```
 
-When `--do_preprocessing` is omitted, the input must already be preprocessed by
-ANTsPyNet `brain_age` or by this brain-age salience pipeline. Arbitrary T1
-preprocessing will not produce the expected model input.
+`--do_preprocessing` defaults to `true`. Set it to `false` only when the input
+is already preprocessed by ANTsPyNet `brain_age` or by this brain-age salience
+pipeline. Arbitrary T1 preprocessing will not produce the expected model input.
 
 Analyze a specific ANTsPyNet `brain_age`-preprocessed T1 image:
 
 ```bash
 python brain_age_salience_bids.py /path/to/bids sub-001 \
-  --t1-image /path/to/sub-001_desc-preproc_T1w.nii.gz
+  --t1-image /path/to/sub-001_desc-preproc_T1w.nii.gz \
+  --do_preprocessing false
 ```
 
 Use a specific BIDS run:
 
 ```bash
-python brain_age_salience_bids.py /path/to/bids sub-001 --session 01 --run 02 --do_preprocessing
+python brain_age_salience_bids.py /path/to/bids sub-001 --session 01 --run 02
 ```
 
 Set a seed for stochastic SmoothGrad/augmentation steps:
 
 ```bash
-python brain_age_salience_bids.py /path/to/bids sub-001 --do_preprocessing --n-smooth 25 --seed 42
+python brain_age_salience_bids.py /path/to/bids sub-001 --n-smooth 25 --seed 42
 ```
 
 Use the original ANTsPyNet median-of-slices fallback instead of the default
@@ -118,7 +119,7 @@ python brain_age_salience_bids.py /path/to/bids sub-001 --session 01 --median-he
 
 | Option | Purpose |
 | --- | --- |
-| `--do_preprocessing` | Run ANTsPyNet preprocessing before inference. |
+| `--do_preprocessing {true,false}` | Run ANTsPyNet preprocessing before inference. Defaults to `true`; use `false` only for ANTsPyNet `brain_age`-preprocessed inputs. |
 | `--t1-image` | Use an explicit T1 image path instead of BIDS auto-detection. |
 | `--output-dir` | Write derivatives somewhere other than `bids_root/derivatives/brain_age_salience`. |
 | `--median-head` | Fall back to the original ANTsPyNet median of slice-wise predictions. |
@@ -163,13 +164,13 @@ For BIDS datasets, use `brain_age_salience_bids.py`. For one explicit T1 image,
 `brain_age_salience.py` can run the same analysis directly:
 
 ```bash
-python brain_age_salience.py /path/to/sub-001_desc-preproc_T1w.nii.gz
+python brain_age_salience.py /path/to/sub-001_desc-preproc_T1w.nii.gz --do_preprocessing false
 ```
 
-If the image has not already been preprocessed, add `--do_preprocessing`:
+If the image has not already been preprocessed, use the default preprocessing:
 
 ```bash
-python brain_age_salience.py /path/to/sub-001_T1w.nii.gz --do_preprocessing
+python brain_age_salience.py /path/to/sub-001_T1w.nii.gz
 ```
 
 Run `python brain_age_salience.py --help` for the standalone command-line

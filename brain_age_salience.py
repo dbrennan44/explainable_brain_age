@@ -39,7 +39,9 @@ def brain_age_with_affine_smoothgrad_unified(
         slice-wise model and summarize by median.
 
     do_preprocessing : bool
-        If True, run ANTsPyNet preprocessing. If False, assume input is preprocessed.
+        If True (default), run ANTsPyNet preprocessing. If False, assume input
+        was already preprocessed by ANTsPyNet brain_age or this brain-age
+        salience pipeline.
 
     Returns a dict with:
         predicted_age
@@ -321,6 +323,19 @@ def _jsonable(value):
     return value.tolist() if hasattr(value, "tolist") else value
 
 
+def _str_to_bool(value):
+    if isinstance(value, bool):
+        return value
+
+    value = value.lower()
+    if value in {"true", "t", "yes", "y", "1"}:
+        return True
+    if value in {"false", "f", "no", "n", "0"}:
+        return False
+
+    raise argparse.ArgumentTypeError("expected true or false")
+
+
 def _analysis_label(args):
     parts = ["mean" if args.mean_head else "median"]
     if args.n_affine:
@@ -342,19 +357,19 @@ def build_parser():
         formatter_class=ArgumentFormatter,
         epilog="""examples:
   Analyze an already ANTsPyNet brain_age-preprocessed T1 image:
-    python brain_age_salience.py sub-001_desc-preproc_T1w.nii.gz
+    python brain_age_salience.py sub-001_desc-preproc_T1w.nii.gz --do_preprocessing false
 
   Run ANTsPyNet preprocessing first:
-    python brain_age_salience.py sub-001_T1w.nii.gz --do_preprocessing
+    python brain_age_salience.py sub-001_T1w.nii.gz
 
   Add SmoothGrad salience:
-    python brain_age_salience.py sub-001_desc-preproc_T1w.nii.gz --n-smooth 25 --mask-noise
+    python brain_age_salience.py sub-001_desc-preproc_T1w.nii.gz --do_preprocessing false --n-smooth 25 --mask-noise
 
   Use the original ANTsPyNet median-of-slices fallback:
     python brain_age_salience.py sub-001_desc-preproc_T1w.nii.gz --median-head
 
 For BIDS datasets, prefer the BIDS helper:
-    python brain_age_salience_bids.py /path/to/bids sub-001 --session ses-01 --do_preprocessing
+    python brain_age_salience_bids.py /path/to/bids sub-001 --session ses-01
 """,
     )
 
@@ -372,12 +387,15 @@ For BIDS datasets, prefer the BIDS helper:
     )
     parser.add_argument(
         "--do_preprocessing",
-        action="store_true",
+        nargs="?",
+        const=True,
+        default=True,
+        type=_str_to_bool,
+        metavar="{true,false}",
         help=(
-            "Run ANTsPyNet preprocessing before inference. Without this flag, "
-            "the input is assumed to be a T1 image already preprocessed by "
-            "ANTsPyNet brain_age/this brain-age salience pipeline; arbitrary "
-            "preprocessing will not work."
+            "Run ANTsPyNet preprocessing before inference. Set to false only "
+            "when the input is already preprocessed by ANTsPyNet brain_age/this "
+            "brain-age salience pipeline; arbitrary preprocessing will not work."
         ),
     )
     parser.set_defaults(mean_head=True)

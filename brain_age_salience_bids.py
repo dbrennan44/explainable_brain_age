@@ -130,7 +130,7 @@ def _find_preprocessed_t1(derivatives_dir, base):
     raise FileNotFoundError(
         "Expected preprocessed T1 not found:\n"
         f"  {expected}\n"
-        "Run once with --do_preprocessing, or provide --t1-image."
+        "Run with --do_preprocessing true, or provide --t1-image."
     )
 
 
@@ -151,19 +151,32 @@ def _jsonable(value):
     return value.tolist() if hasattr(value, "tolist") else value
 
 
+def _str_to_bool(value):
+    if isinstance(value, bool):
+        return value
+
+    value = value.lower()
+    if value in {"true", "t", "yes", "y", "1"}:
+        return True
+    if value in {"false", "f", "no", "n", "0"}:
+        return False
+
+    raise argparse.ArgumentTypeError("expected true or false")
+
+
 def build_parser():
     parser = argparse.ArgumentParser(
         description="Run ANTsPyNet brain-age inference with salience maps on a BIDS T1w image.",
         formatter_class=ArgumentFormatter,
         epilog="""examples:
   Run preprocessing from a raw BIDS T1w:
-    python brain_age_salience_bids.py /path/to/bids sub-001 --session ses-01 --do_preprocessing
+    python brain_age_salience_bids.py /path/to/bids sub-001 --session ses-01
 
   Reuse the ANTsPyNet brain_age-preprocessed T1 saved in derivatives:
-    python brain_age_salience_bids.py /path/to/bids 001 --session 01 --n-smooth 25 --mask-noise
+    python brain_age_salience_bids.py /path/to/bids 001 --session 01 --do_preprocessing false --n-smooth 25 --mask-noise
 
   Analyze an explicit ANTsPyNet brain_age-preprocessed T1 image:
-    python brain_age_salience_bids.py /path/to/bids sub-001 --t1-image /path/to/preproc_T1w.nii.gz
+    python brain_age_salience_bids.py /path/to/bids sub-001 --t1-image /path/to/preproc_T1w.nii.gz --do_preprocessing false
 
   Use the original ANTsPyNet median-of-slices fallback:
     python brain_age_salience_bids.py /path/to/bids sub-001 --session ses-01 --median-head
@@ -205,19 +218,25 @@ def build_parser():
     input_group.add_argument(
         "--do_preprocessing",
         dest="do_preprocessing",
-        action="store_true",
+        nargs="?",
+        const=True,
+        default=True,
+        type=_str_to_bool,
+        metavar="{true,false}",
         help=(
-            "Run ANTsPyNet preprocessing before inference. Without this flag, "
-            "the input is assumed to be a T1 image already preprocessed by "
-            "ANTsPyNet brain_age/this brain-age salience pipeline; arbitrary "
-            "preprocessing will not work."
+            "Run ANTsPyNet preprocessing before inference. Set to false only "
+            "when the input is already preprocessed by ANTsPyNet brain_age/this "
+            "brain-age salience pipeline; arbitrary preprocessing will not work."
         ),
     )
     input_group.add_argument(
         "--preprocess",
         "--do-preprocessing",
         dest="do_preprocessing",
-        action="store_true",
+        nargs="?",
+        const=True,
+        default=argparse.SUPPRESS,
+        type=_str_to_bool,
         help=argparse.SUPPRESS,
     )
     input_group.add_argument(
@@ -226,7 +245,8 @@ def build_parser():
         default=None,
         help=(
             "Explicit path to a T1 image. By default this image is assumed to be "
-            "preprocessed; combine with --do_preprocessing to preprocess it first."
+            "raw and will be preprocessed; combine with --do_preprocessing false "
+            "only for ANTsPyNet brain_age-preprocessed inputs."
         ),
     )
     input_group.add_argument(
