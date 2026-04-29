@@ -13,7 +13,7 @@ contribute to elevated brain-age estimates.
 
 ## Methods Overview
 
-![Methods overview](./figures/methods_figure.png)
+![Methods overview](figures/methods_figure.png)
 
 The pipeline builds on the ANTsPyNet / DeepBrainNet brain-age model, which is
 based on the deep brain network described by Bashyam et al. for MRI-derived
@@ -62,7 +62,7 @@ brain.
 
 ## Conference Application
 
-![OHBM brain-age results](./figures/OHBM_brain_age.png)
+![OHBM brain-age results](figures/OHBM_brain_age.png)
 
 This code was used for an OHBM conference analysis examining predicted brain age
 and salience-map differences across cognitive status in older adults from the
