@@ -1,37 +1,110 @@
 # Explainable Brain Age
 
-This repository contains a small BIDS-oriented pipeline for running the ANTsPyNet
-DeepBrainNet brain-age model on T1-weighted MRI images and writing salience maps
-that can be inspected alongside the predicted brain age.
+A research pipeline for running explainable brain-age inference on T1-weighted
+MRI scans using the ANTsPyNet implementation of DeepBrainNet. The pipeline wraps
+a slice-wise brain-age model with a differentiable subject-level prediction head
+and propagates gradients back to the input image to generate salience maps.
 
-The project has two scripts:
+This project was developed to support biomarker-oriented neuroimaging analyses:
+rather than reporting only a single predicted brain age, it also exports
+voxel-wise attribution maps that help interrogate which anatomical image features
+contribute to elevated brain-age estimates.
 
-- `brain_age_salience_bids.py`: user-facing command-line wrapper for BIDS datasets.
-- `brain_age_salience.py`: standalone single-image CLI and importable backend
-  function that loads the ANTsPyNet brain-age model, optionally preprocesses a
-  T1 image, and computes vanilla gradients and optional SmoothGrad salience
-  maps.
+> This code is intended for research and reproducible analysis workflows. It is
+> not intended for clinical diagnosis or individual medical decision-making.
 
-This code is intended for research and reproducible analysis workflows. It is not
-intended for clinical diagnosis or individual medical decision-making.
+## Methods Overview
 
-## Example Figure
+<!-- TODO: Add methods figure here. Suggested path: figures/methods_overview.png -->
 
-![OHBM example figure](figures/ohbm0002.png)
+The pipeline builds on the ANTsPyNet / DeepBrainNet brain-age model, which is
+based on the deep brain network described by Bashyam et al. for MRI-derived
+brain-age and disease signatures. The original model operates slice-wise on
+structural MRI and summarizes slice-level predictions into a subject-level
+brain-age estimate.
 
-## What the Pipeline Does
+This repository adds an explainability layer for subject-level salience mapping:
 
-For each T1w image, the pipeline can:
+1. Load and preprocess a T1-weighted MRI using ANTsPyNet-compatible preprocessing.
+2. Apply the pretrained slice-wise DeepBrainNet brain-age model.
+3. Attach a differentiable mean head across slice-wise predictions.
+4. Backpropagate the subject-level predicted brain age to the input slices.
+5. Export vanilla gradient salience maps and optional SmoothGrad salience maps.
+6. Reconstruct salience maps as 3D NIfTI images for downstream neuroimaging
+   analysis.
 
-1. Run ANTsPyNet T1 preprocessing, including brain extraction, bias correction,
-   denoising, and registration to the cropped MNI152 template.
-2. Apply the pretrained ANTsPyNet `brainAgeDeepBrainNet` model slice-by-slice.
-3. Summarize brain age with the differentiable mean head by default, or use
-   `--median-head` to fall back to the original ANTsPyNet median of slice-wise
-   predictions.
-4. Write vanilla gradient salience maps.
-5. Optionally write SmoothGrad salience maps with brain-masked noise and/or
-   affine augmentation averaging.
+The differentiable mean-head is the key implementation step: it makes the
+participant-level brain-age estimate differentiable with respect to the input
+image, allowing voxel-wise salience to be computed for the predicted brain age
+rather than only for isolated slice-level outputs.
+
+## Novelty
+
+Most brain-age workflows report a predicted age or brain-age delta as a global
+imaging-derived marker. That scalar can be sensitive to neurodegeneration, but
+it is anatomically non-specific: many spatially distributed aging-related or
+disease-related features can produce a similarly elevated predicted age.
+
+This project extends a pretrained slice-wise brain-age model into an
+interpretable biomarker pipeline by:
+
+- preserving the original pretrained ANTsPyNet / DeepBrainNet model weights;
+- adding a differentiable subject-level mean-prediction head for attribution;
+- computing gradient-based salience for the subject-level brain-age estimate;
+- supporting SmoothGrad to reduce noisy voxel-wise gradients;
+- exporting salience maps as neuroimaging-compatible NIfTI derivatives;
+- retaining slice-wise predictions as a QA signal to detect obvious model or
+  preprocessing failures.
+
+This makes the pipeline useful not only for estimating brain age, but also for
+asking where in the image the model is deriving evidence for an older-appearing
+brain.
+
+## Conference Application
+
+<!-- TODO: Add OHBM results figure here. Suggested path: figures/ohbm_results.png -->
+
+This code was used for an OHBM conference analysis examining predicted brain age
+and salience-map differences across cognitive status in older adults from the
+ARIC study. In that work, the brain-age model was applied to structural MRI from
+1,966 participants. Predicted brain age increased monotonically across cognitive
+status, with higher estimates in mild cognitive impairment and dementia relative
+to cognitively normal participants after adjustment for chronological age and
+sex.
+
+Group-level salience analyses identified differences in ventricular and
+periventricular regions adjacent to medial temporal, limbic, striatal, and
+brainstem structures. These findings illustrate the value of XAI for brain-age
+biomarker development: salience mapping can reveal regionally specific image
+features associated with elevated brain-age estimates, while also exposing model
+dependencies on high-contrast CSF-adjacent anatomy.
+
+## Background
+
+DeepBrainNet was introduced as a deep learning model for MRI-derived brain-age
+estimation and disease-related imaging signatures. ANTsPyNet provides a
+TensorFlow/Keras implementation that can be applied to T1-weighted MRI images.
+This repository uses that pretrained model as the prediction backbone and adds
+a salience-mapping layer around it.
+
+SmoothGrad is a gradient-based explanation method that averages sensitivity maps
+over noisy perturbations of the input image, often producing visually cleaner
+salience maps than raw gradients. In this repository, SmoothGrad is adapted to
+the brain-age setting by propagating the differentiable subject-level prediction
+back to the MRI input.
+
+## References
+
+1. Bashyam VM, Erus G, Doshi J, et al. MRI signatures of brain age and disease
+   over the lifespan based on a deep brain network and 14,468 individuals
+   worldwide. *Brain*. 2020;143(7):2312-2324. doi:10.1093/brain/awaa160
+
+2. Smilkov D, Thorat N, Kim B, Viégas F, Wattenberg M. SmoothGrad: removing
+   noise by adding noise. arXiv. 2017. doi:10.48550/arXiv.1706.03825
+
+3. Brennan D, Walter A, Majbri A, Pike J, Gugger JJ, Schneider A. Saliency
+   Mapping Reveals Imaging Signatures Associated with Elevated Brain Age in
+   Older Adults with Cognitive Impairment. OHBM abstract.
 
 ## Installation
 
