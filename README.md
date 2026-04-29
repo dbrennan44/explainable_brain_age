@@ -2,7 +2,7 @@
 
 This repository contains scripts for running ANTsPyNet DeepBrainNet brain-age
 prediction on T1-weighted MRI and exporting salience maps for the predicted
-brain age.
+brain age. Not intended for clinical diagnosis or individual medical decision-making.
 
 The code provides:
 
@@ -10,8 +10,6 @@ The code provides:
   backend function.
 - `brain_age_salience_bids.py`: BIDS-oriented wrapper around
   `brain_age_salience.py`.
-
-Not intended for clinical diagnosis or individual medical decision-making.
 
 ## Methods
 
