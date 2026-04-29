@@ -1,0 +1,48 @@
+# macOS
+.DS_Store
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# Local environments
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Packaging/build outputs
+build/
+dist/
+
+# Local BIDS data and derivatives
+data/
+rawdata/
+sourcedata/
+derivatives/
+sub-*/
+ses-*/
+
+# Local run outputs and logs
+outputs/
+scratch/
+tmp/
+*.log
+
+# Large neuroimaging/model artifacts
+*.nii
+*.nii.gz
+*.h5
+*.hdf5
+*Affine.mat
+*Warp.nii.gz
+*InverseWarp.nii.gz

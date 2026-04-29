@@ -1,0 +1,11 @@
+name: explainable-brain-age
+channels:
+  - conda-forge
+dependencies:
+  - python=3.8
+  - pip>=24
+  - pip:
+      - antspynet==0.3.0
+      - antspyx==0.6.1
+      - numpy==1.24.3
+      - tensorflow==2.13.1
