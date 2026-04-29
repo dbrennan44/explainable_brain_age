@@ -11,8 +11,7 @@ The code provides:
 - `brain_age_salience_bids.py`: BIDS-oriented wrapper around
   `brain_age_salience.py`.
 
-This is research code. It is not intended for clinical diagnosis or individual
-medical decision-making.
+Not intended for clinical diagnosis or individual medical decision-making.
 
 ## Methods
 
