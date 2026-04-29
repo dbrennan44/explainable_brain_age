@@ -13,7 +13,7 @@ contribute to elevated brain-age estimates.
 
 ## Methods Overview
 
-<!-- TODO: Add methods figure here. Suggested path: figures/methods_overview.png -->
+![Methods overview](./figures/methods_figure.png)
 
 The pipeline builds on the ANTsPyNet / DeepBrainNet brain-age model, which is
 based on the deep brain network described by Bashyam et al. for MRI-derived
@@ -57,6 +57,8 @@ interpretable biomarker pipeline by:
 This makes the pipeline useful not only for estimating brain age, but also for
 asking where in the image the model is deriving evidence for an older-appearing
 brain.
+
+
 
 ## Conference Application
 
