@@ -41,6 +41,17 @@ conda env create -f environment.yml
 conda activate explainable-brain-age
 ```
 
+On macOS Apple Silicon, this environment was created locally with the classic
+conda solver:
+
+```bash
+CONDA_SOLVER=classic conda env create -f environment.yml
+```
+
+See `MACOS_ARM64_INSTALL_NOTES.md` for the observed `osx-arm64` installation
+details. In brief: `tensorflow==2.13.0` worked where `2.13.1` did not, and
+`antspyx` was installed through `pip` inside the conda environment.
+
 Check the command-line help:
 
 ```bash
