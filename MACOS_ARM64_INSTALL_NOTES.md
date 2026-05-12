@@ -9,12 +9,11 @@ Mac (`osx-arm64`).
 - `tensorflow==2.13.0` installed and worked.
 - `antspyx` was not available from `conda-forge` for `osx-arm64` in this setup,
   so it was installed via `pip` and built from source.
-- Conda environment creation needed the classic solver path on this machine.
 
-## Recommended command
+## Install
 
 ```bash
-CONDA_SOLVER=classic conda env create -f environment.yml
+conda env create -f environment.yml
 conda activate explainable-brain-age
 ```
 
