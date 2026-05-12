@@ -32,9 +32,9 @@ prediction.
 
 ## SmoothGrad Example
 
-Single-slice SmoothGrad salience map from 100 to 1000 samples:
+Single-slice SmoothGrad salience map from 10 to 1000 samples:
 
-![SmoothGrad salience map from 100 to 1000 samples](figures/T1_lower_z067_smoothgrad_0100_to_1000_jet_smooth2mm.gif)
+![SmoothGrad salience map from 10 to 1000 samples](figures/T1_lower_z067_smoothgrad_010_to_1000_jet_smooth2mm.gif)
 
 ## Application in Cognitive Impairment - OHBM 2026
 
